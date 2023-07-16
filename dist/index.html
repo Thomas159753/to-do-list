@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../src/style.css"/>
+    <title>ToDoList</title>
+</head>
+<body>
+    <header>
+        <span class="logo">
+            <i class="fa-regular fa-circle-check"></i>
+            <h1 class="logo__text">To-Do List</h1>
+        </span>
+        <span class="search">
+            <input type="text" id="search" name="search" size="150">
+        </span>
+        <div class="show_nav">
+            <button type="button" class="btn_nav">
+            <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    <body>
+        <nav class="nav-bar">
+            <div class="nav_buttons">
+                <button class="btn" id="inbox">
+                    <span class="btn__icon"><i class="fa-solid fa-inbox"></i></span>
+                    <span class="icon__text">Inbox</span>
+                </button>
+                <button class="btn" id="today">
+                    <span class="btn__icon"><i class="fa-solid fa-calendar-day"></i></span>
+                    <span class="icon__text">Today</span>
+                </button>
+                <button class="btn" id="upcoming">
+                    <span class="btn__icon"><i class="fa-solid fa-calendar-week"></i></span>
+                    <span class="icon__text">Upcoming</span>
+                </button>
+            </div>
+            <div class="projects">
+                <h2 class="projects-title">Projects</h2>
+                <button class="btn" id="new_project">
+                    <span class="btn__icon"><i class="fa-solid fa-plus"></i></span>
+                    <span class="icon__text">Add new project </span>
+                </button>
+            </div>
+        </nav>
+        <div class="project_preview" id="project_preview"></div>
+    </body>
+
+    <footer>
+        <p>Copyright © The Odin Project 2023</p>
+    </footer>
+</body>
+</html>
