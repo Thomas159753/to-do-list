@@ -22,6 +22,9 @@
     --btn-primary: #009578;
     --btn-hover: #008168;
     --btn-active: #006e58;
+    --btn-cancel: #751414;
+    --btn-cancel-hover: #631313;
+    --btn-cancel-active: #520e0e;
 }
 
 body{
@@ -68,12 +71,12 @@ header{
     align-items: center;
     cursor: pointer;
 }
-.search{
+.search, .project_input{
     display: flex;
     justify-content: center;
     align-items: center;
 }
-#search{
+#search, .project_input{
     max-width: 15rem;
     height: 1.5em;
     border: none;
@@ -81,7 +84,7 @@ header{
     font-size: 1.5em;
     border-radius: 1.5em;
 }
-.search input[type=text]{
+.search input, .project_input{
     text-align: center;
     padding: 0 1em;
 }
@@ -101,15 +104,21 @@ main{
 .nav_buttons{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: inherit;
 }
 .projects{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: inherit;
     color: var(--text-white);
 }
-
+form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: inherit;
+    color: var(--text-white);
+}
 /* footer */
 
 footer{
@@ -157,6 +166,42 @@ footer{
     font-size: 2rem;
 }
 
+/* form buttons */
+.input_buttons{
+    display: inherit;
+    gap: inherit;
+}
+.btn_add_project{ 
+    font-size: 2em;
+    color: var(--text-white);
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    border-radius: 0.5em;
+    cursor: pointer;
+    width: 8.5rem;
+}
+.btn_add_project:hover{
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.btn_add_project:active{
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn_cancel_project{
+    font-size: 2em;
+    color: var(--text-white);
+    background-color: var(--btn-cancel);
+    padding: 1rem;
+    border-radius: 0.5em;
+    cursor: pointer;
+    width: 8.5rem;
+}
+.btn_cancel_project:hover{
+    background-color: var(--btn-cancel-hover);
+}
+.btn_cancel_project:active{
+    background-color: var(--btn-cancel-active);
+}
 @media (max-width: 800px) {
     .show_nav{
         display:flex;

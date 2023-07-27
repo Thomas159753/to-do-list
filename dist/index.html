@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../src/styles/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="main.js" defer></script>
     <title>ToDoList</title>
 </head>
 <body>
@@ -44,6 +46,13 @@
                     <span class="btn__icon"><i class="fa-solid fa-plus"></i></span>
                     <span class="btn__text">Add new project </span>
                 </button>
+                <form id="project_form" class="project_form" autocomplete="off">
+                    <input type="text" id="project_input" class="project_input" placeholder="Project name" value="test">
+                    <div class="input_buttons">
+                        <button type="button" class="btn_add_project">Add</button>
+                        <button type="button" class="btn_cancel_project">Cancel</button>
+                    </div>
+                </form>
             </div>
         </nav>
         <div class="project_preview" id="project_preview"></div>
