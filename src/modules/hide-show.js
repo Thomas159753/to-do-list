@@ -1,4 +1,4 @@
-const hide_show = (function() {
+const hide_show = function() {
     //cash dom
     const $nav = $('.nav-bar')
     const $form = $nav.find('form')
@@ -8,5 +8,5 @@ const hide_show = (function() {
     } else {
         $form.css('display', 'none');
     }
-})
+}
 export default hide_show

@@ -47,12 +47,24 @@
                     <span class="btn__text">Add new project </span>
                 </button>
                 <form id="project_form" class="project_form" autocomplete="off">
-                    <input type="text" id="project_input" class="project_input" placeholder="Project name" value="test">
+                    <input type="text" id="project_input" class="project_input" placeholder="Project name">
                     <div class="input_buttons">
                         <button type="button" class="btn_add_project">Add</button>
                         <button type="button" class="btn_cancel_project">Cancel</button>
                     </div>
                 </form>
+                <div id="projectModule">
+                    <ul id="projects-list">
+                        <!-- <script id="project-template" type="text/template">
+                            {{#projects}}
+                                <li>
+                                    <span>{{.}}</span>
+                                    <i class="del">X</i>
+                                </li>
+                            {{/projects}}
+                        </script> -->
+                    </ul>
+                </div>
             </div>
         </nav>
         <div class="project_preview" id="project_preview"></div>
