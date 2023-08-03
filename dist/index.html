@@ -55,19 +55,33 @@
                 </form>
                 <div id="projectModule">
                     <ul id="projects-list">
-                        <!-- <script id="project-template" type="text/template">
+                        <script id="project-template" type="text/template">
                             {{#projects}}
-                                <li>
-                                    <span>{{.}}</span>
-                                    <i class="del">X</i>
+                                <li class = "project-li">
+                                    <span class="btn__icon"><i class="fa-solid fa-list"></i></span>
+                                    <span class="btn__text">{{name}}</span>
+                                    <span class="btn__icon"><i class="fa-regular fa-trash-can"></i></span>
                                 </li>
                             {{/projects}}
-                        </script> -->
+                        </script>
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="project_preview" id="project_preview"></div>
+        <div class="tasks-preview" id="tasks-preview">
+            <h2 class="task-header">Test</h2>
+            <button class="btn-add-task">Add Task</button>
+            <ul id="tasks-list">
+                <!-- <script id="tasks-template" type="text/template"> -->
+                    <!-- {{#tasks}} -->
+                        <li>
+                            <span class="btn_icon"><i class="fa-light fa-circle"></i></i></span>
+                            <span class="btn_text">{{name}}</span>
+                        </li>
+                    <!-- {{#tasks}} -->
+                <!-- </script> -->
+            </ul>
+        </div>
     </main>
 
     <footer>

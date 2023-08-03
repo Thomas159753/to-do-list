@@ -25,6 +25,8 @@
     --btn-cancel: #751414;
     --btn-cancel-hover: #631313;
     --btn-cancel-active: #520e0e;
+    --tasks-backround: #dadada;
+    --task-header: #000000;
 }
 
 body{
@@ -92,7 +94,7 @@ header{
 /* main */
 main{
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 1fr 6fr;
 }
 .nav-bar{
     background-color: var(--secondary-page-colour);
@@ -101,7 +103,7 @@ main{
     padding: 2rem;
     gap: 1rem;
 }
-.nav_buttons{
+.nav_buttons, ul{
     display: flex;
     flex-direction: column;
     gap: inherit;
@@ -119,6 +121,10 @@ form{
     gap: inherit;
     color: var(--text-white);
 }
+.projects-title{
+    padding-left: 1.5rem;
+}
+
 /* footer */
 
 footer{
@@ -132,7 +138,7 @@ footer{
 }
 
 /* btn */
-.btn{
+.btn, .project-li{
     display: inline-flex;
     height: 3.125rem;
     background-color: transparent;
@@ -146,11 +152,11 @@ footer{
     gap: 1rem;
 }
 
-.btn:hover{
+.btn:hover, .project-li:hover{
     background: var(--btn-hover);
 }
 
-.btn:active{
+.btn:active, .project-li:active{
     background: var(--btn-active);
 }
 
@@ -166,6 +172,33 @@ footer{
     font-size: 2rem;
 }
 
+.project-li{
+    justify-content: space-between;
+}
+
+/* main task area */
+.tasks-preview {
+    background-color: var(--tasks-backround);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1rem;
+}
+.task-header{
+    text-align: center;
+    color: var(--task-header);
+    font-size: 2rem;
+}
+.btn-add-task{
+    display: inherit;
+    width: 50vw;
+    justify-content: center;
+    padding: .5rem;
+    border-radius: 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
 /* form buttons */
 .input_buttons{
     display: inherit;
