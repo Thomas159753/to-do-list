@@ -1,12 +1,12 @@
-const hide_show = function() {
-    //cash dom
-    const $nav = $('.nav-bar')
-    const $form = $nav.find('form')
-
-    if ($form.css('display') === 'none') {
-        $form.css('display', 'flex');
+const hide_show = function(element, btn) {
+    const $element = $(element)
+    const $btn = $(btn)
+    if ($element.css('display') === 'none' && $btn.css('display') === 'flex') {
+        $element.css('display', 'flex');
+        $btn.css('display', 'none')
     } else {
-        $form.css('display', 'none');
+        $element.css('display', 'none');
+        $btn.css('display', 'flex')
     }
 }
 export default hide_show

@@ -20,8 +20,13 @@ class Project {
     this.$ul.html(Mustache.render(this.$template, data));
   }
   add(projectname){
-    this.projects.push({ name: projectname});
+    this.projects.push({ name: projectname, dataIndex: projectname, tasks: [] });
     this.render()
+  }
+  addTask(projectIndex, taskName) {
+    const project = this.projects.find(project => project.dataIndex === projectIndex);
+    project.tasks.push({ name: taskName });
+    console.log(this.projects)
   }
   del(e){
     const $remove = $(e.target).closest('li');
