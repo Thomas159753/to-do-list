@@ -18,7 +18,8 @@ const application = (function() {
     const $taskInputDiv = $taskDiv.find('.task-input-div');
     const $taskInput = $taskDiv.find('#task_input');
     const $btnAddTask = $taskDiv.find('.btn_add_task')
-    const project = new Project();
+    
+    let projects = [];
 
     // bind events
     const bindEvents = () => {
@@ -35,17 +36,21 @@ const application = (function() {
     }
     const addProject = () => {
         const projectName = $projectInput.val();
-        project.add(projectName);
+        const newProject = new Project(projectName)
+        projects.push(newProject)
+        newProject.render();
         $projectInput.val('');
         hide_show($form, $addProject);
+        console.log(projects)
     }
     const deleteProject = (e) => {
         project.del(e)
     }
     const addTask = (projectIndex) => {
-        console.log(projectIndex)
         const taskName = $taskInput.val();
-        project.addTask(projectIndex, taskName);
+        const project = projects.find(project => project.dataIndex === projectIndex);
+        project.addProjectTask(taskName);
+        // project.render();
         $taskInput.val('')
         hide_show($taskInputDiv, $btnShowTaskForm);
     }
