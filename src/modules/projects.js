@@ -27,8 +27,9 @@ class Project {
     `;
     const taskTemplate =`
       <li>
-        <span class="btn_icon"><i class="fa-light fa-circle"></i></span>
-        <span class="btn_text">{{task}}</span>
+        <span class="task_icon"><i class="fa-regular fa-circle"></i></span>
+        <span class="task_text">{{task}}</span>
+        <input class="date" type="date" id="dateInput" name="date">
       </li>
     `;
     if (i === 'project'){
