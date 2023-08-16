@@ -54,22 +54,12 @@
                     </div>
                 </form>
                 <div id="projectModule">
-                    <ul id="projects-list">
-                        <script id="project-template" type="text/template">
-                            {{#projects}}
-                                <li class = "project-li" data-project-index="{{dataIndex}}">
-                                    <span class="btn__icon"><i class="fa-solid fa-list"></i></span>
-                                    <span class="btn__text">{{name}}</span>
-                                    <span class="btn__icon"><i class="fa-regular fa-trash-can"></i></span>
-                                </li>
-                            {{/projects}}
-                        </script>
-                    </ul>
+                    <ul id="projects-list"></ul>
                 </div>
             </div>
         </nav>
         <div class="tasks-preview" id="tasks-preview">
-            <h2 class="task-header">Test</h2>
+            <h2 class="task-header"></h2>
             <button class="add-task-show">Add Task</button>
         <div class = "task-input-div">
             <input type="text" id="task_input" class="task-input" placeholder="Task name">
@@ -78,16 +68,7 @@
                 <button type="button" class="btn_cancel_task">Cancel</button>
             </div>
         </div>
-        <ul id="tasks-list">
-            <script id="tasks-template" type="text/template">
-                {{#tasklist}}
-                    <li>
-                        <span class="btn_icon"><i class="fa-light fa-circle"></i></i></span>
-                        <span class="btn_text">{{name}}</span>
-                    </li>
-                {{/tasklist}}
-            </script>
-        </ul>
+        <ul id="tasks-list"></ul>
     </main>
 
     <footer>

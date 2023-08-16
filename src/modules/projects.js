@@ -5,34 +5,44 @@ class Project {
     this.name = name;
     this.tasks = [];
     this.dataIndex = name;
-      this.cacheDom()
+    this.cacheDom();
   }
 
   cacheDom() {
     this.$nav = $('.nav-bar');
     this.$projectModule = this.$nav.find('#projectModule');
     this.$ul = this.$projectModule.find('ul');
-    this.$template = this.$projectModule.find('#project-template').html();
 
     this.$tasksPreview = $('.tasks-preview');
-    this.$tasktemplate = this.$tasksPreview.find('#tasks-template').html();
     this.$taskUl = this.$tasksPreview.find('#tasks-list');
   }
 
-  render() {
-    const data = {
-      projects: [{name: this.name, dataIndex: this.dataIndex}]
-    };
-    // const allTasks = this.projects.reduce((tasks, project) => tasks.concat(project.tasks), []);
-    
-    // data.tasksList = allTasks;
-
-    this.$ul.html(Mustache.render(this.$template, data));
-    // this.$taskUl.html(Mustache.render(this.$tasktemplate, { tasklist: allTasks }));
+  render(i) {
+    const projectTemplate = `
+    <li class="project-li" data-project-index="{{dataIndex}}">
+        <span class="btn__icon"><i class="fa-solid fa-list"></i></span>
+        <span class="btn__text">{{name}}</span>
+        <span class="btn__icon"><i class="fa-regular fa-trash-can"></i></span>
+    </li>
+    `;
+    const taskTemplate =`
+      <li>
+        <span class="btn_icon"><i class="fa-light fa-circle"></i></span>
+        <span class="btn_text">{{task}}</span>
+      </li>
+    `;
+    if (i === 'project'){
+      this.$ul.append(Mustache.render(projectTemplate, {name: this.name, dataIndex: this.dataIndex}));
+    }
+    else if (i === 'task'){
+      this.$taskUl.empty();
+      this.tasks.forEach(task => {
+        this.$taskUl.append(Mustache.render(taskTemplate, {task: task.name}));
+      })
+    }
   }
   addProjectTask(taskName) {
-    this.tasks.push({ name: taskName });
-    console.log(this.tasks)
+    this.tasks.push({ name: taskName });   
   }
   // del(e){
   //   const $remove = $(e.target).closest('li');

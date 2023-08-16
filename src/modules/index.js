@@ -4,7 +4,7 @@ import hide_show from './hide-show'
 const application = (function() {
     //cache dom
     const $nav = $('.nav-bar');
-    const $addProject = $nav.find('#new_project')
+    const $addProject = $nav.find('#new_project');
     // cache form dom
     const $form = $nav.find('#project_form');
     const $projectInput = $form.find('#project_input');
@@ -13,11 +13,13 @@ const application = (function() {
     //cache project dom
     const $ul = $nav.find('ul');
     //cache task
-    const $taskDiv = $('.tasks-preview')
-    const $btnShowTaskForm = $taskDiv.find('.add-task-show')
+    const $taskDiv = $('.tasks-preview');
+    const $btnShowTaskForm = $taskDiv.find('.add-task-show');
     const $taskInputDiv = $taskDiv.find('.task-input-div');
     const $taskInput = $taskDiv.find('#task_input');
-    const $btnAddTask = $taskDiv.find('.btn_add_task')
+    const $btnAddTask = $taskDiv.find('.btn_add_task');
+    const $taskUl = $taskDiv.find('#tasks-list');
+    const $taskHeader = $taskDiv.find('.task-header');
     
     let projects = [];
 
@@ -25,36 +27,41 @@ const application = (function() {
     const bindEvents = () => {
         $btnAddProject.on('click', () => addProject());
         $ul.on('click', 'i.fa-trash-can', deleteProject);
-        $ul.on('click', 'span.btn__text', getIndex);
+        $ul.on('click', 'li.project-li', getIndex);
         $addProject.on('click', () => hide_show($form, $addProject));
         $btnShowTaskForm.on('click', () => hide_show($taskInputDiv, $btnShowTaskForm));
     }
+    const renderProjectTasks = (projectSearched) => {
+        $taskHeader.html(projectSearched.name);
+        console.log($taskHeader.html)
+        $taskUl.empty();
+        $btnAddTask.off('click').on('click', () => addTask(projectSearched));
+        projectSearched.render('task');
+    }
     const getIndex = (e) => {
         const projectIndex = $(e.currentTarget).closest('.project-li').data('project-index');
-        $btnAddTask.on('click', () => addTask(projectIndex));
-        
+        const projectSearched = projects.find(project => project.dataIndex == projectIndex);
+        renderProjectTasks(projectSearched);
     }
     const addProject = () => {
-        const projectName = $projectInput.val();
-        const newProject = new Project(projectName)
-        projects.push(newProject)
-        newProject.render();
+        const newProject = new Project($projectInput.val());
+        projects.push(newProject);
+        newProject.render('project');
         $projectInput.val('');
         hide_show($form, $addProject);
-        console.log(projects)
     }
     const deleteProject = (e) => {
-        project.del(e)
+        // project.del(e)
     }
-    const addTask = (projectIndex) => {
-        const taskName = $taskInput.val();
-        const project = projects.find(project => project.dataIndex === projectIndex);
-        project.addProjectTask(taskName);
-        // project.render();
-        $taskInput.val('')
+    const addTask = (projectSearched) => {
+        // const project = projects.find(project => project.dataIndex == projectIndex);
+        const project = projectSearched;
+        project.addProjectTask($taskInput.val());
+        project.render('task');
+        $taskInput.val('');
         hide_show($taskInputDiv, $btnShowTaskForm);
     }
 
     
-    return bindEvents()
+    return bindEvents();
 })()
