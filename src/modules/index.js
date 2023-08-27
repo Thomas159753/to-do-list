@@ -1,5 +1,6 @@
 import Project from './projects.js'
 import hide_show from './hide-show'
+import MarktaskComplete from './tasksComplete.js'
 
 const application = (function() {
     //cache dom
@@ -23,6 +24,7 @@ const application = (function() {
     
     let projects = [];
     let index = 0;
+    let projectSearched = null
 
     // bind events
     const bindEvents = () => {
@@ -31,7 +33,9 @@ const application = (function() {
         $ul.on('click', 'li.project-li', (e) => {
             getIndex(e)
             hide_show(undefined, $btnShowTaskForm, false)});
-        $taskUl.on('click', 'li.task-li', getIndex)
+            $taskUl.on('click', 'i.fa-circle, i.fa-check-circle', (e) => {
+                getIndex(e,e.currentTarget);
+            });            
         $addProject.on('click', () => hide_show($form, $addProject));
         $btnShowTaskForm.on('click', () => hide_show($taskInputDiv, $btnShowTaskForm));
     }
@@ -41,11 +45,19 @@ const application = (function() {
         $btnAddTask.off('click').on('click', () => addTask(projectSearched));
         projectSearched.render('task');
     }
-    const getIndex = (e) => {  //modafie to swap betwen task and project
-        const projectIndex = $(e.currentTarget).closest('.item').data('index');
-        console.log(projectIndex)
-        const projectSearched = projects.find(project => project.dataIndex == projectIndex);
-        renderProjectTasks(projectSearched);
+    const getIndex = (e, currentTarget) => {
+        const itemIndex = $(e.currentTarget).closest('.item').data('index');
+        
+        if($(e.currentTarget).hasClass('project-li')) {
+                projectSearched = projects.find(project => project.dataIndex == itemIndex);
+                renderProjectTasks(projectSearched);
+            }
+            else if($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('fa-check-circle')){
+                const taskIndex = projectSearched.tasks.findIndex(task => task.dataIndex === itemIndex);
+                const taskSearched = projectSearched.tasks.find(task => task.dataIndex === itemIndex);
+                MarktaskComplete(currentTarget, taskSearched);
+                projectSearched.completeTask(taskIndex);
+            }
     }
     const addProject = () => {
         const newProject = new Project($projectInput.val(), index++);
@@ -58,13 +70,17 @@ const application = (function() {
         // project.del(e)
     }
     const addTask = (projectSearched) => {
-        const project = projectSearched;
-        project.addProjectTask($taskInput.val(), index++);
-        project.render('task');
+        projectSearched.addProjectTask($taskInput.val(), index++);
+        projectSearched.render('task');
         $taskInput.val('');
         hide_show($taskInputDiv, $btnShowTaskForm);
     }
 
-    
     return bindEvents();
 })()
+
+// need to make a new render template for the completed tasks
+// the taskComplete.js is unesery just use
+// <span class="btn__icon"><i class="fa-solid fa-check-circle"></i></span> */}
+// istead and to css to use a line in the midle
+// maybe use taskComplete.js to rune the renderProjectTasks function there??

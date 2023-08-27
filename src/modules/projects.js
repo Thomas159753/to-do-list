@@ -26,7 +26,7 @@ class Project {
     </li>
     `;
     const taskTemplate =`
-      <li class="task-li item" data-index="{{dataIndex}}">
+      <li class="item" data-index="{{dataIndex}}">
         <span class="task_icon"><i class="fa-regular fa-circle"></i></span>
         <span class="task_text">{{task}}</span>
         <input class="date" type="date" id="dateInput" name="date">
@@ -45,6 +45,11 @@ class Project {
   addProjectTask(taskName, index) {
     this.tasks.push({ name: taskName, completed: false, dataIndex: index});
   }
+  completeTask(taskIndex) {
+    const completedTask = this.tasks.splice(taskIndex, 1)[0];
+      completedTask.completed = true;
+      this.completedTasks.push(completedTask);
+}
   // del(e){
   //   const $remove = $(e.target).closest('li');
   //   const i = this.$ul.find('li').index($remove);
