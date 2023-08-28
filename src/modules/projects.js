@@ -32,6 +32,13 @@ class Project {
         <input class="date" type="date" id="dateInput" name="date">
       </li>
     `;
+    const taskCompleteTemplate = `
+    <li class="item" data-index="{{dataIndex}}">
+      <span class="task_icon"><i class="fa-regular fa-check-circle"></i></span>
+      <span class="task_text">{{task}}</span>
+      <input class="date" type="date" id="dateInput" name="date">
+    </li>
+  `;
     if (i === 'project'){
       this.$ul.append(Mustache.render(projectTemplate, {name: this.name, dataIndex: this.dataIndex}));
     }
@@ -40,22 +47,30 @@ class Project {
       this.tasks.forEach(task => {
         this.$taskUl.append(Mustache.render(taskTemplate, {task: task.name, dataIndex: task.dataIndex}));
       })
+      this.completedTasks.forEach(task => {
+        this.$taskUl.append(Mustache.render(taskCompleteTemplate, {task: task.name, dataIndex: task.dataIndex}));
+      })
     }
   }
   addProjectTask(taskName, index) {
     this.tasks.push({ name: taskName, completed: false, dataIndex: index});
   }
-  completeTask(taskIndex) {
-    const completedTask = this.tasks.splice(taskIndex, 1)[0];
+  completeTask(taskIndex, taskSearched) {
+    if(taskSearched.completed === false){
+      const completedTask = this.tasks.splice(taskIndex, 1)[0];
       completedTask.completed = true;
       this.completedTasks.push(completedTask);
-}
-  // del(e){
-  //   const $remove = $(e.target).closest('li');
-  //   const i = this.$ul.find('li').index($remove);
-  //   this.projects.splice(i, 1);
-  //   this.render();
-  // }
+    }
+    else{
+      const unCompletedTask = this.completedTasks.splice(taskIndex, 1)[0];
+      unCompletedTask.completed = false;
+      this.tasks.push(unCompletedTask);
+    }
+  }
+  deleteProject(){
+    this.tasks = [];
+    this.completedTasks = [];
+  }
 }
 
 export default Project;
