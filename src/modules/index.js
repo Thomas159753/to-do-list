@@ -28,19 +28,19 @@ const application = (function() {
     // bind events
     const bindEvents = () => {
         $btnAddProject.on('click', () => addProject());
-        $ul.on('click', 'i.fa-trash-can', deleteProject);
-        $ul.on('click', 'li.project-li', (e) => {
-            getIndex(e)
-            hide_show(undefined, $btnShowTaskForm, false)});
-        $taskUl.on('click', 'i.fa-circle, i.fa-check-circle', (e) => {
-            getIndex(e,e.currentTarget);
-        });            
-        $addProject.on('click', () => hide_show($form, $addProject));
-        $btnShowTaskForm.on('click', () => hide_show($taskInputDiv, $btnShowTaskForm));
+        $ul.on('click', 'i.fa-trash-can', (e) => {
+            e.stopPropagation();
+            getIndex(e);
+        });
+        $ul.on('click', 'li.project-li', (e) => {getIndex(e)});
+        $taskUl.on('click', 'i.fa-circle, i.fa-check-circle', (e) => {getIndex(e,e.currentTarget)});            
+        $addProject.on('click', () => hide_show($form, $addProject, false));
+        $btnShowTaskForm.on('click', () => hide_show($taskInputDiv, $btnShowTaskForm, false));
     }
 
     const getIndex = (e) => {
         const itemIndex = $(e.currentTarget).closest('.item').data('index');
+        const item = $(e.currentTarget).closest('.item');
         
         if ($(e.currentTarget).hasClass('project-li')) {
             projectSearched = projects.find(project => project.dataIndex == itemIndex);
@@ -62,6 +62,10 @@ const application = (function() {
                 renderTasks(projectSearched);
             }
         }
+        else if ($(e.currentTarget).hasClass('fa-trash-can')) {
+            const projectToDelete = projects.find(project => project.dataIndex == itemIndex);
+            deleteProject(projectToDelete, itemIndex, item)
+        }
     }
     const addProject = () => {
         const newProject = new Project($projectInput.val(), index++);
@@ -70,33 +74,33 @@ const application = (function() {
         $projectInput.val('');
         hide_show($form, $addProject);
     }
-    const deleteProject = (e) => {
-        const $projectItem = $(e.target).closest('.project-li');
-        const projectIndex = $projectItem.data('index');
-        const projectToDelete = projects.find(project => project.dataIndex === projectIndex);
-    
-        if (projectToDelete) {
-            projects = projects.filter(project => project.dataIndex !== projectIndex);
-            projectToDelete.deleteProject();
-            $projectItem.remove();
-            // Update any related data or references if needed
-        }
+    const deleteProject = (projectToDelete, projectIndex, $projectItem) => {  
+        projects = projects.filter(project => project.dataIndex !== projectIndex);
+        projectToDelete.deleteProject();
+        $projectItem.remove();
+        renderTasks(projectToDelete, true);
     }
     const addTask = (projectSearched) => {
         projectSearched.addProjectTask($taskInput.val(), index++);
-        projectSearched.render('task');
         $taskInput.val('');
-        hide_show($taskInputDiv, $btnShowTaskForm);
+        renderTasks(projectSearched);
     }
-
-    const renderTasks = (projectSearched) => {
-        $taskHeader.html(projectSearched.name);
-        $taskUl.empty();
-        $btnAddTask.off('click').on('click', () => addTask(projectSearched));
+    // rendering tasks
+    const renderTasks = (projectSearched, index) => {
+        if (index === true){
+            $taskHeader.html("");
+            hide_show(undefined, $btnShowTaskForm, true);
+            $taskUl.empty();
+        }
+        else {
+            $taskHeader.html(projectSearched.name);
+            $btnAddTask.off('click').on('click', () => addTask(projectSearched));
+            hide_show($taskInputDiv, $btnShowTaskForm);
+        }
         projectSearched.render('task');
     }
 
     return bindEvents();
 })()
 
-// istead and to css to use a line in the midle
+//glitch on delete when nothing is display in tasks and delete the project add task button shows
