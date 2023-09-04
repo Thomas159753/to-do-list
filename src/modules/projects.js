@@ -29,14 +29,14 @@ class Project {
       <li class="item" data-index="{{dataIndex}}">
         <span class="task_icon"><i class="fa-regular fa-circle"></i></span>
         <span class="task_text">{{task}}</span>
-        <input class="date" type="date" id="dateInput" name="date">
+        <input class="date" type="date" id="dateInput" name="date" value="{{date}}">
       </li>
     `;
     const taskCompleteTemplate = `
     <li class="item" data-index="{{dataIndex}}">
       <span class="task_icon"><i class="fa-regular fa-check-circle"></i></span>
       <span class="task_text">{{task}}</span>
-      <input class="date" type="date" id="dateInput" name="date">
+      <input class="date" type="date" id="dateInput" name="date" value="{{date}}">
     </li>
   `;
     if (i === 'project'){
@@ -45,15 +45,19 @@ class Project {
     else if (i === 'task'){
       this.$taskUl.empty();
       this.tasks.forEach(task => {
-        this.$taskUl.append(Mustache.render(taskTemplate, {task: task.name, dataIndex: task.dataIndex}));
+        this.$taskUl.append(Mustache.render(taskTemplate, {task: task.name, dataIndex: task.dataIndex, date: task.date || ""}));
       })
       this.completedTasks.forEach(task => {
-        this.$taskUl.append(Mustache.render(taskCompleteTemplate, {task: task.name, dataIndex: task.dataIndex}));
+        this.$taskUl.append(Mustache.render(taskCompleteTemplate, {task: task.name, dataIndex: task.dataIndex, date: task.date || ""}));
       })
     }
   }
   addProjectTask(taskName, index) {
-    this.tasks.push({ name: taskName, completed: false, dataIndex: index});
+    this.tasks.push({ name: taskName, completed: false, dataIndex: index, date: null});
+  }
+  addDate(taskSearched, date) {
+    taskSearched.date = date.toString();
+    console.log(taskSearched)
   }
   completeTask(taskIndex, taskSearched) {
     if(taskSearched.completed === false){

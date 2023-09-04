@@ -33,7 +33,8 @@ const application = (function() {
             getIndex(e);
         });
         $ul.on('click', 'li.project-li', (e) => {getIndex(e)});
-        $taskUl.on('click', 'i.fa-circle, i.fa-check-circle', (e) => {getIndex(e,e.currentTarget)});            
+        $taskUl.on('click', 'i.fa-circle, i.fa-check-circle', (e) => {getIndex(e,e.currentTarget)});
+        $taskUl.on('change', 'input.date', (e) => {getIndex(e,e.currentTarget)});
         $addProject.on('click', () => hide_show($form, $addProject, false));
         $btnShowTaskForm.on('click', () => hide_show($taskInputDiv, $btnShowTaskForm, false));
     }
@@ -46,10 +47,10 @@ const application = (function() {
             projectSearched = projects.find(project => project.dataIndex == itemIndex);
             renderTasks(projectSearched);
         }
-        else if ($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('fa-check-circle')) {
+        else if ($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('fa-check-circle') || $(e.currentTarget).hasClass('date')) {
             let taskIndex, taskSearched;
     
-            if ($(e.currentTarget).hasClass('fa-circle')) {
+            if ($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('date')) {
                 taskIndex = projectSearched.tasks.findIndex(task => task.dataIndex === itemIndex);
                 taskSearched = projectSearched.tasks.find(task => task.dataIndex === itemIndex);
             } else {
@@ -58,8 +59,16 @@ const application = (function() {
             }
     
             if (taskSearched) {
-                projectSearched.completeTask(taskIndex, taskSearched);
-                renderTasks(projectSearched);
+                if ($(e.currentTarget).hasClass('date')) {
+                    const newDate = $(e.currentTarget).val();
+                    console.log(taskSearched)
+                    console.log(newDate)
+                    projectSearched.addDate(taskSearched, newDate);
+                }
+                else{
+                    projectSearched.completeTask(taskIndex, taskSearched);
+                    renderTasks(projectSearched);
+                }
             }
         }
         else if ($(e.currentTarget).hasClass('fa-trash-can')) {
@@ -104,3 +113,8 @@ const application = (function() {
 })()
 
 //glitch on delete when nothing is display in tasks and delete the project add task button shows
+    //no idea i cant replicate the glitch (when i find bugs add the steps on how to replicate it)
+        //found it create 2 projets click the second project, then delete the second and then the last and you will see it
+
+// a bug thats potentially a feature now that when i complete a task i cant set a due date
+    //complete the task and then try to set a due date it doesnt save it the code skips the if (taskSearched) line
