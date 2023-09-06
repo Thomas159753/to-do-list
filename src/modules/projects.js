@@ -57,7 +57,6 @@ class Project {
   }
   addDate(taskSearched, date) {
     taskSearched.date = date.toString();
-    console.log(taskSearched)
   }
   completeTask(taskIndex, taskSearched) {
     if(taskSearched.completed === false){

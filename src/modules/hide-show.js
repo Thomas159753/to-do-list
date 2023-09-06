@@ -5,7 +5,7 @@ const hide_show = function(element, btn, isVisible) {
         $element.css('display', 'flex');
         $btn.css('display', 'none')
     } 
-    else if ($btn.css('display') === 'flex' && isVisible === true) {
+    else if (isVisible === true) { // for delete
         $btn.css('display', 'none');
     }  else {
         $element.css('display', 'none');

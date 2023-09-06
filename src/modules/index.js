@@ -1,10 +1,12 @@
 import Project from './projects.js'
 import hide_show from './hide-show'
+import filter from './filter.js'
 
 const application = (function() {
     //cache dom
     const $nav = $('.nav-bar');
     const $addProject = $nav.find('#new_project');
+    const $inboxBtb = $nav.find('#inbox');
     // cache form dom
     const $form = $nav.find('#project_form');
     const $projectInput = $form.find('#project_input');
@@ -28,6 +30,7 @@ const application = (function() {
     // bind events
     const bindEvents = () => {
         $btnAddProject.on('click', () => addProject());
+        $inboxBtb.on('click', () => filter(projects));
         $ul.on('click', 'i.fa-trash-can', (e) => {
             e.stopPropagation();
             getIndex(e);
@@ -61,8 +64,6 @@ const application = (function() {
             if (taskSearched) {
                 if ($(e.currentTarget).hasClass('date')) {
                     const newDate = $(e.currentTarget).val();
-                    console.log(taskSearched)
-                    console.log(newDate)
                     projectSearched.addDate(taskSearched, newDate);
                 }
                 else{
@@ -112,9 +113,7 @@ const application = (function() {
     return bindEvents();
 })()
 
-//glitch on delete when nothing is display in tasks and delete the project add task button shows
-    //no idea i cant replicate the glitch (when i find bugs add the steps on how to replicate it)
-        //found it create 2 projets click the second project, then delete the second and then the last and you will see it
+//when i find bugs add the steps on how to replicate it
 
 // a bug thats potentially a feature now that when i complete a task i cant set a due date
     //complete the task and then try to set a due date it doesnt save it the code skips the if (taskSearched) line
