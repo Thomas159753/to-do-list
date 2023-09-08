@@ -7,6 +7,9 @@ const application = (function() {
     const $nav = $('.nav-bar');
     const $addProject = $nav.find('#new_project');
     const $inboxBtb = $nav.find('#inbox');
+    const $todayBtb = $nav.find('#today');
+    const $upcomingBtb = $nav.find('#upcoming');
+    const $searchBar = $nav.find('#search');
     // cache form dom
     const $form = $nav.find('#project_form');
     const $projectInput = $form.find('#project_input');
@@ -26,11 +29,30 @@ const application = (function() {
     let projects = [];
     let index = 0;
     let projectSearched = null
+    
+    //------------- test
+    // const project1 = new Project("Project A", 0);
+
+// project1.addProjectTask("Task 1", 0); // No date
+// project1.addProjectTask("Task 2", 1); // Today's date
+// project1.addProjectTask("Task 3", 2); // Upcoming date
+
+// const project2 = new Project("Project B", 1);
+
+// project2.addProjectTask("Task A", 0); // No date
+// project2.addProjectTask("Task B", 1); // Today's date
+// project2.addProjectTask("Task C", 2); // Upcoming date
+
+// projects.push(project1, project2);
+    //---------------------
 
     // bind events
     const bindEvents = () => {
         $btnAddProject.on('click', () => addProject());
-        $inboxBtb.on('click', () => filter(projects));
+        $todayBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'today')));
+        $inboxBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'all')));
+        $upcomingBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'upcoming')));
+        $searchBar.on('input', () => {renderTasks(projectSearched, 'filter', filter(projects, 'search', $searchBar.val()))});
         $ul.on('click', 'i.fa-trash-can', (e) => {
             e.stopPropagation();
             getIndex(e);
@@ -48,7 +70,7 @@ const application = (function() {
         
         if ($(e.currentTarget).hasClass('project-li')) {
             projectSearched = projects.find(project => project.dataIndex == itemIndex);
-            renderTasks(projectSearched);
+            renderTasks(projectSearched, 'task');
         }
         else if ($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('fa-check-circle') || $(e.currentTarget).hasClass('date')) {
             let taskIndex, taskSearched;
@@ -68,7 +90,7 @@ const application = (function() {
                 }
                 else{
                     projectSearched.completeTask(taskIndex, taskSearched);
-                    renderTasks(projectSearched);
+                    renderTasks(projectSearched, 'task');
                 }
             }
         }
@@ -88,32 +110,44 @@ const application = (function() {
         projects = projects.filter(project => project.dataIndex !== projectIndex);
         projectToDelete.deleteProject();
         $projectItem.remove();
-        renderTasks(projectToDelete, true);
+        renderTasks(projectToDelete, 'delete');
     }
     const addTask = (projectSearched) => {
         projectSearched.addProjectTask($taskInput.val(), index++);
         $taskInput.val('');
-        renderTasks(projectSearched);
+        renderTasks(projectSearched, 'task');
     }
     // rendering tasks
-    const renderTasks = (projectSearched, index) => {
-        if (index === true){
+    const renderTasks = (projectSearched, rendertype, filteredTasks) => {
+        if (rendertype === 'delete'){
             $taskHeader.html("");
             hide_show(undefined, $btnShowTaskForm, true);
             $taskUl.empty();
+            projectSearched.render(rendertype);
+        }
+        else if (rendertype === 'filter'){
+            $taskHeader.html("");
+            hide_show(undefined, $btnShowTaskForm, true);
+            $taskUl.empty();
+            projectSearched.render(rendertype, filteredTasks);
         }
         else {
             $taskHeader.html(projectSearched.name);
             $btnAddTask.off('click').on('click', () => addTask(projectSearched));
             hide_show($taskInputDiv, $btnShowTaskForm);
+            projectSearched.render(rendertype);
         }
-        projectSearched.render('task');
     }
 
     return bindEvents();
 })()
 
 //when i find bugs add the steps on how to replicate it
+    //bugs
+    // when tect is open to add task and then click on inbox task stays open
+    // when adding project and hit enter the page resets
+    //bug if you change the date on a tusk that is searched ie in inbox it doesnt save the date
+
 
 // a bug thats potentially a feature now that when i complete a task i cant set a due date
     //complete the task and then try to set a due date it doesnt save it the code skips the if (taskSearched) line

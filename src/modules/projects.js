@@ -1,4 +1,5 @@
 import Mustache from 'mustache';
+import filter from './filter';
 class Project {
   constructor(name, index) {
     this.name = name;
@@ -17,7 +18,7 @@ class Project {
     this.$taskUl = this.$tasksPreview.find('#tasks-list');
   }
 
-  render(i) {
+  render(rendertype, filterTask) {
     const projectTemplate = `
     <li class="project-li item" data-index="{{dataIndex}}">
         <span class="btn__icon"><i class="fa-solid fa-list"></i></span>
@@ -39,10 +40,16 @@ class Project {
       <input class="date" type="date" id="dateInput" name="date" value="{{date}}">
     </li>
   `;
-    if (i === 'project'){
+    if (rendertype === 'project'){
       this.$ul.append(Mustache.render(projectTemplate, {name: this.name, dataIndex: this.dataIndex}));
     }
-    else if (i === 'task'){
+    else if (rendertype === 'filter'){
+      this.$taskUl.empty();
+      filterTask.forEach(task => {
+        this.$taskUl.append(Mustache.render(taskTemplate, { task: task.name, dataIndex: task.dataIndex, date: task.date || "" }));
+    });
+    }
+    else if (rendertype === 'task'){
       this.$taskUl.empty();
       this.tasks.forEach(task => {
         this.$taskUl.append(Mustache.render(taskTemplate, {task: task.name, dataIndex: task.dataIndex, date: task.date || ""}));
