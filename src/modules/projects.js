@@ -1,10 +1,10 @@
 import Mustache from 'mustache';
 import filter from './filter';
 class Project {
-  constructor(name, index) {
+  constructor(name, index, inportedTasks = [], completeTask = []) {
     this.name = name;
-    this.tasks = [];
-    this.completedTasks = [];
+    this.tasks = inportedTasks;
+    this.completedTasks = completeTask;
     this.dataIndex = index;
     this.cacheDom();
   }

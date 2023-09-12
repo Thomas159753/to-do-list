@@ -29,26 +29,13 @@ const application = (function() {
     let projects = [];
     let index = 0;
     let projectSearched = null
-    
-    //------------- test
-    // const project1 = new Project("Project A", 0);
-
-// project1.addProjectTask("Task 1", 0); // No date
-// project1.addProjectTask("Task 2", 1); // Today's date
-// project1.addProjectTask("Task 3", 2); // Upcoming date
-
-// const project2 = new Project("Project B", 1);
-
-// project2.addProjectTask("Task A", 0); // No date
-// project2.addProjectTask("Task B", 1); // Today's date
-// project2.addProjectTask("Task C", 2); // Upcoming date
-
-// projects.push(project1, project2);
-    //---------------------
 
     // bind events
     const bindEvents = () => {
-        $btnAddProject.on('click', () => addProject());
+        $form.on('submit', (e) =>{
+            e.preventDefault();
+            addProject();
+        });
         $todayBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'today')));
         $inboxBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'all')));
         $upcomingBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'upcoming')));
@@ -69,7 +56,8 @@ const application = (function() {
         const item = $(e.currentTarget).closest('.item');
         
         if ($(e.currentTarget).hasClass('project-li')) {
-            projectSearched = projects.find(project => project.dataIndex == itemIndex);
+            const searchedProject = JSON.parse(localStorage.getItem(itemIndex)); //find project in storage by index
+            const projectSearched = new Project(searchedProject.name, searchedProject.dataIndex, searchedProject.tasks, searchedProject.completedTasks); //remake project
             renderTasks(projectSearched, 'task');
         }
         else if ($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('fa-check-circle') || $(e.currentTarget).hasClass('date')) {
@@ -95,27 +83,29 @@ const application = (function() {
             }
         }
         else if ($(e.currentTarget).hasClass('fa-trash-can')) {
-            const projectToDelete = projects.find(project => project.dataIndex == itemIndex);
-            deleteProject(projectToDelete, itemIndex, item)
+            const foundProject = JSON.parse(localStorage.getItem(itemIndex)); //find project in storage by index
+            const projectToDelete = new Project(foundProject.name, foundProject.dataIndex, foundProject.tasks, foundProject.completedTasks); //remake project
+            deleteProject(projectToDelete, item)
         }
     }
     const addProject = () => {
         const newProject = new Project($projectInput.val(), index++);
-        projects.push(newProject);
+        localStorage.setItem(`${newProject.dataIndex}`, JSON.stringify(newProject)); //add project to storage
         newProject.render('project');
         $projectInput.val('');
         hide_show($form, $addProject);
     }
-    const deleteProject = (projectToDelete, projectIndex, $projectItem) => {  
-        projects = projects.filter(project => project.dataIndex !== projectIndex);
+    const deleteProject = (projectToDelete, $projectItem) => {
         projectToDelete.deleteProject();
         $projectItem.remove();
+        localStorage.removeItem(projectToDelete.dataIndex); //delete project from local storage
         renderTasks(projectToDelete, 'delete');
     }
     const addTask = (projectSearched) => {
         projectSearched.addProjectTask($taskInput.val(), index++);
         $taskInput.val('');
         renderTasks(projectSearched, 'task');
+        localStorage.setItem(`${projectSearched.dataIndex}`, JSON.stringify(projectSearched)); //update storage by adding task
     }
     // rendering tasks
     const renderTasks = (projectSearched, rendertype, filteredTasks) => {
@@ -128,6 +118,7 @@ const application = (function() {
         else if (rendertype === 'filter'){
             $taskHeader.html("");
             hide_show(undefined, $btnShowTaskForm, true);
+            hide_show(undefined, $taskInputDiv, true);
             $taskUl.empty();
             projectSearched.render(rendertype, filteredTasks);
         }
@@ -144,10 +135,5 @@ const application = (function() {
 
 //when i find bugs add the steps on how to replicate it
     //bugs
-    // when tect is open to add task and then click on inbox task stays open
-    // when adding project and hit enter the page resets
-    //bug if you change the date on a tusk that is searched ie in inbox it doesnt save the date
 
-
-// a bug thats potentially a feature now that when i complete a task i cant set a due date
-    //complete the task and then try to set a due date it doesnt save it the code skips the if (taskSearched) line
+    // store somewhare the index count in storage so it doesnt reset
