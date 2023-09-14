@@ -26,20 +26,23 @@ const application = (function() {
     const $taskUl = $taskDiv.find('#tasks-list');
     const $taskHeader = $taskDiv.find('.task-header');
     
-    let projects = [];
-    let index = 0;
+    let index = JSON.parse(localStorage.getItem("index")) || 0;
+        if (index === 0){
+            localStorage.setItem("index", JSON.stringify(index));
+        }
     let projectSearched = null
 
     // bind events
     const bindEvents = () => {
+        render(undefined, 'project')
         $form.on('submit', (e) =>{
             e.preventDefault();
             addProject();
         });
-        $todayBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'today')));
-        $inboxBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'all')));
-        $upcomingBtb.on('click', () => renderTasks(projectSearched, 'filter',filter(projects, 'upcoming')));
-        $searchBar.on('input', () => {renderTasks(projectSearched, 'filter', filter(projects, 'search', $searchBar.val()))});
+        $todayBtb.on('click', () => render(projectSearched, 'filter',filter('today')));
+        $inboxBtb.on('click', () => render(projectSearched, 'filter',filter('all')));
+        $upcomingBtb.on('click', () => render(projectSearched, 'filter',filter('upcoming')));
+        $searchBar.on('input', () => {render(projectSearched, 'filter', filter('search', $searchBar.val()))});
         $ul.on('click', 'i.fa-trash-can', (e) => {
             e.stopPropagation();
             getIndex(e);
@@ -54,11 +57,10 @@ const application = (function() {
     const getIndex = (e) => {
         const itemIndex = $(e.currentTarget).closest('.item').data('index');
         const item = $(e.currentTarget).closest('.item');
-        
         if ($(e.currentTarget).hasClass('project-li')) {
             const searchedProject = JSON.parse(localStorage.getItem(itemIndex)); //find project in storage by index
-            const projectSearched = new Project(searchedProject.name, searchedProject.dataIndex, searchedProject.tasks, searchedProject.completedTasks); //remake project
-            renderTasks(projectSearched, 'task');
+            projectSearched = new Project(searchedProject.name, searchedProject.dataIndex, searchedProject.tasks, searchedProject.completedTasks); //remake project
+            render(projectSearched, 'task');
         }
         else if ($(e.currentTarget).hasClass('fa-circle') || $(e.currentTarget).hasClass('fa-check-circle') || $(e.currentTarget).hasClass('date')) {
             let taskIndex, taskSearched;
@@ -78,7 +80,7 @@ const application = (function() {
                 }
                 else{
                     projectSearched.completeTask(taskIndex, taskSearched);
-                    renderTasks(projectSearched, 'task');
+                    render(projectSearched, 'task');
                 }
             }
         }
@@ -87,33 +89,52 @@ const application = (function() {
             const projectToDelete = new Project(foundProject.name, foundProject.dataIndex, foundProject.tasks, foundProject.completedTasks); //remake project
             deleteProject(projectToDelete, item)
         }
+        localStorage.setItem(`${projectSearched.dataIndex}`, JSON.stringify(projectSearched)); //update the data in storage
     }
     const addProject = () => {
         const newProject = new Project($projectInput.val(), index++);
-        localStorage.setItem(`${newProject.dataIndex}`, JSON.stringify(newProject)); //add project to storage
+        localStorage.setItem("index", JSON.stringify(index)) // update the index
         newProject.render('project');
         $projectInput.val('');
         hide_show($form, $addProject);
+        localStorage.setItem(`${newProject.dataIndex}`, JSON.stringify(newProject)); //add project to storage
     }
     const deleteProject = (projectToDelete, $projectItem) => {
         projectToDelete.deleteProject();
         $projectItem.remove();
         localStorage.removeItem(projectToDelete.dataIndex); //delete project from local storage
-        renderTasks(projectToDelete, 'delete');
+        render(projectToDelete, 'delete');
     }
     const addTask = (projectSearched) => {
         projectSearched.addProjectTask($taskInput.val(), index++);
+        localStorage.setItem("index", JSON.stringify(index)) // update the index
         $taskInput.val('');
-        renderTasks(projectSearched, 'task');
         localStorage.setItem(`${projectSearched.dataIndex}`, JSON.stringify(projectSearched)); //update storage by adding task
+        render(projectSearched, 'task');
     }
     // rendering tasks
-    const renderTasks = (projectSearched, rendertype, filteredTasks) => {
+    const render = (projectSearched, rendertype, filteredTasks) => {
         if (rendertype === 'delete'){
             $taskHeader.html("");
             hide_show(undefined, $btnShowTaskForm, true);
             $taskUl.empty();
             projectSearched.render(rendertype);
+        }
+        else if (rendertype === 'project'){
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const dataFromLocalStorage = localStorage.getItem(key);
+        
+                let parsedData = null;
+                let newProject
+                if (dataFromLocalStorage) {
+                    parsedData = JSON.parse(dataFromLocalStorage);
+                }
+                if (parsedData instanceof Object) {
+                    newProject = new Project(parsedData.name, parsedData.dataIndex, parsedData.tasks, parsedData.completedTasks); //remake project
+                    newProject.render('project')
+                }
+            }
         }
         else if (rendertype === 'filter'){
             $taskHeader.html("");
@@ -137,3 +158,4 @@ const application = (function() {
     //bugs
 
     // store somewhare the index count in storage so it doesnt reset
+        //make a new page for the first load and for the index in that place
